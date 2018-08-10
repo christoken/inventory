@@ -1,0 +1,711 @@
+	<!DOCTYPE HTML>
+	<html>
+	<!-- start of the html head -->
+	<head>
+      <meta charset="UTF-8">
+      <title>Inventory System</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0">
+      <link rel="shortcut icon" href="images/favicon.png">
+      <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+      <link rel="stylesheet" href="css/mfpizza.css">
+	  <link rel="stylesheet" href="css/todo.css">
+	  <link rel="stylesheet" href="css/gridtable.css">
+      <script>//window.$ = window.jQuery = WLJQ;</script>
+	  <script src="js/todo.js"></script>
+	  <script type="text/javascript" src="http://ajax.googleapis.com/
+ajax/libs/jquery/1.5/jquery.min.js"></script>
+      <link rel="stylesheet" type="text/css" href="css/jquery.mobile.flatui.css" />
+      <script src="js/jquery.min.js"></script>
+      <script src="js/jquery.mobile-1.3.1.min.js"></script>
+	  <script type="text/javascript" src="js/jquery.js"></script>	
+<link rel="stylesheet" type="text/css" href="tcal.css" />
+<script type="text/javascript" src="tcal.js"></script> 	 
+<!-- start of the login script -->
+ <script>
+	  var serverURL="http://localhost/inventorymobile/server/"; // The server address of the PHP files
+	  var baseURL="http://localhost/UItemplate/"; // The server address of the PHP files
+	  serverURL="http://www.threepillars.co.ke/inventory/server/";
+	  var loginstatus=0;
+    	  // this is for login in
+	  $(document).ready(function(){
+		$("#btnlogin").click(function(){
+		var username= $("#loginId").val();
+		var password=$("#loginPassword").val();
+				
+		if(username=='' && password=='' ){
+		alert("Please fill out the form");
+		}
+		else if(username=='' && password!==''){alert('Username is required')}
+		else if(password=='' && username!==''){alert('The password is required')}
+		
+		else{
+			var url=serverURL +"loginmobile.php";
+		$.post(url, {//Required URL of the page on server 
+		// Data Sending With Request To Server
+		username:username,
+		password:password,
+		},
+		function(response,status){ // Required Callback Function
+		alert(response);//"response" receives - whatever written in echo of above PHP script.
+		var size= response.length;
+		//alert(size);
+    if(size>4)  {
+      // alert("not empty");
+	   loginstatus=1;
+	   storeSession(username,password);//call function to say if we are logged in
+	   window.location.href = baseURL +"index.html#homePage"; //direct to the homepage if login is successfull 
+	  
+    }
+    else {
+        alert("empty");
+    }
+	   	
+		});
+		}
+		});
+		});
+	  </script>
+   </head>
+ 
+   <body id="content" style="display: mfloginPage;" >
+   
+   <!-- this is for logging page -->   <!-- start of the login div page -->
+   <div data-role="page" id="mfloginPage" >
+         <div data-role="header" data-theme="d">
+            <!--<a data-iconpos="notext" href="#homePage" data-role="button" data-icon="back"></a> -->
+            <h1>Inventory System Login</h1>
+         </div>
+         <div data-role="content" role="main">
+            <div class="ui-block"><input type="text" placeholder="Username" id="loginId"/></div>
+            <div class="ui-block"><input type="password" placeholder="Password" id="loginPassword"/></div>
+            <div class="ui-block"><a data-role="button" data-icon="flat-settings" data-theme="d" id="btnlogin" >Login</a></div>
+           
+         </div>
+         <div data-role="footer" data-theme="d">
+            <center>
+               <h1>&copy;Chris</h1>
+            </center>
+         </div>
+      </div>
+	  
+      <!-- Begging of Home Page after one has login -->
+  <div data-role="page" id="homePage">
+	  
+         <div data-role="panel" id="panel" data-position="right" data-theme="a" data-display="push"></div>
+         <div data-role="header" data-theme="d">
+            <a data-iconpos="notext" data-role="button" data-icon="home" title="Home">Home</a>
+			<h1>Inventory System:</h1>
+            <h1 id="sessionText"></h1> 
+			
+            <a data-iconpos="notext" href="#panel" data-role="button" data-icon="flat-menu"></a>
+         </div>
+		 
+          <div data-role="content" role="main"> <img src="images/chris-icon2.png" width=50%/>
+		  
+		    <div class="ui-block"><a data-role="button" data-icon="flat-man" data-theme="d" href="#frmsales">Actual sale</a></div>
+            <div class="ui-block"><a data-role="button" data-icon="flat-man" data-theme="d" href="#frmchecksales">Check sales summary</a></div>
+            <div class="ui-block"><a data-role="button" data-icon="flat-settings" data-theme="d" href="#frmsalesummary">Update Sales summary</a></div>
+            <div class="ui-block"><a data-role="button" data-icon="flat-settings" data-theme="d" href="#orderlevel">Check reorder</a></div>
+            <div class="ui-block"><a data-role="button" data-icon="flat-settings" data-theme="d" href="#frmeditprice">Edit price</a></div>
+			<div class="ui-block"><a data-role="button" data-icon="flat-location" data-theme="d" href="#frmrestock">Restock</a></div>
+            <div class="ui-block"><a data-role="button" data-icon="flat-settings" data-theme="d" href="#addnewproduct">Add new item</a></div>
+			<div class="ui-block"><a data-role="button" data-icon="flat-settings" data-theme="d" onclick="clearSession();" >Log out</a></div>
+       
+         </div>
+      </div>
+	  <script> //document.getElementById('salesummary_input').onload=; </script>
+	  
+	  <!-- Start of the div page to add new product -->
+  <div data-role="page" id="addnewproduct">
+	  <script>
+	  //This is the script to connect to the server and save the new product
+	$(document).ready(function(){
+		$("#btninsert").click(function(){
+		var itemname= $("#itemname").val();
+		var product_id=$("#product_id").val();
+		var itemprice=$("#itemprice").val();
+		
+		if(itemname=='' && product_id=='' && itemprice==''){
+		alert("Please fill out the form");
+		}
+		else if(itemname=='' && product_id!==''){alert('Name field is required')}
+		else if(product_id=='' && itemprice!==''){alert('Product ID field is required')}
+		else if(itemprice=='' && product_id!==''){alert('Item price field is required')}
+		else{
+			var url=serverURL +"savenewproduct.php";
+		$.post(url, {//Required URL of the page on server 
+		// Data Sending With Request To Server
+		itemname:itemname,
+		product_id:product_id,
+		itemprice:itemprice
+		},
+		function(response,status){ // Required Callback Function
+		alert(response);//"response" receives - whatever written in echo of above PHP script.
+		$("input[type=text]").val('');
+		document.getElementById("product_id").value="";// retrieve the id of the element to clear in readiness for the next item
+			document.getElementById("itemname").value="";// retrieve the id of the element to clear
+			document.getElementById("itemprice").value="";
+		
+		});
+		}
+		});
+		});
+		</script>
+         <div data-role="header" data-theme="d">
+            <a data-iconpos="notext" data-role="button" data-icon="home" title="Home" href="#homePage">Home</a>
+            <h1>Add New product</h1>
+         </div>
+         <div data-role="content" role="main" id="frmnewproduct">
+            <div class="ui-block"><input type="text" placeholder="Product ID" id="product_id"/></div>
+            <div class="ui-block"><input type="text" placeholder="Product Name" id="itemname"/></div>
+			<div class="ui-block"><input type="number" placeholder="Price" id="itemprice"/></div>
+            <div class="ui-block"><a data-role="button" data-icon="flat-settings" data-theme="d" id="btninsert" >Save Item</a></div>
+           
+         </div>
+      </div>
+	  
+	 <!--Start of the div page to update sales summary  -->
+	  			 
+  <div data-role="page" id="frmsalesummary">
+  <script>
+  
+    $(document).ready(function(){	
+  $('#salesummary_input').focus(function(){ //when the salesummary_input text field gets focus
+		var url=serverURL +"selectitems.php";
+		$.ajax(
+		{
+        // Post select to url.
+        type : 'post',
+        url : url,
+        dataType : 'json', // expected returned data format.
+        data : {
+                //'from' : from,
+				//'to' : to
+				// the variable you're posting.
+        },
+        success : function(data){               
+           //Populate the select list from the items returned from the server
+			var salesummary_input = document.getElementById('salesummary_input');
+			//call the hintersales to select the items
+            salesummary_input.addEventListener("keyup", function(event){createDatalist(event,data,'datalistsalessummary')});
+		
+		    },
+        complete : function(data){
+            // do something, not critical.
+	}
+    });
+	});
+				
+  $("#btnsalessummary").click(function(){
+  // get the value of the selected item from the input text field
+	var product_id = document.getElementById("salesummary_input").value;
+	var datalist = document.getElementById("datalistsalessummary"); // instantiate the data list 
+	
+	//Now find the name of the selected item, data list does not get the description
+	for (var i=0;i<datalist.options.length;i++) 
+    if (datalist.options[i].value == product_id) {
+	var itemname=datalist.options[i].innerText;
+		}
+	var itemselect=product_id ; //the product id is obtained from the input text
+	var numbersold=$("#numbersold").val();
+	var datesold=$("#datesold").val();
+	alert(itemselect+ " and  "+numbersold);
+	
+	if(itemselect=='' && numbersold=='' ){
+		alert("Please fill out the form");
+		}
+		else if(itemselect=='' && numbersold!==''){alert('Item Name field is required')}
+		else if(numbersold=='' && itemselect!==''){alert('New item price field is required')}
+		else{
+		var url=serverURL +"updatesales.php";
+		alert(url);
+		
+		$.ajax(
+		{
+        // Post select to url.
+        type : 'post',
+        url : url,
+        dataType : 'json', // expected returned data format.
+        data : {
+            'itemselect':itemselect,
+			'numbersold':numbersold,
+			'datesold':datesold
+        },
+        success : function(data){
+		
+         },
+        complete : function(data){
+            // Display the string data from the server
+			alert(JSON.stringify(data));
+			document.getElementById("salesummary_input").value="";// retrieve the id of the element to clear in readiness for the next item
+			document.getElementById("numbersold").value="";// retrieve the id of the element to clear
+			document.getElementById("datesold").value="";
+		}
+    });
+	}
+	});
+		
+	});
+	
+	</script>
+		 		 
+		 <div data-role="header" data-theme="d">  <!--The header of the update sales div -->
+		 
+            <a data-iconpos="notext" data-role="button" data-icon="home" title="Home" href="#homePage">Home</a>
+            <h1>Update daily sales</h1>
+         </div>
+		<div data-role="content" role="main" id="salesummarydiv">
+		
+		<div> <input type="text" name="saleslist" id="salesummary_input" list="datalistsalessummary" placeholder="Type name or id of item">
+		<datalist id="datalistsalessummary" >
+        </datalist>
+		</div>
+		  
+            <div ><input type="number" placeholder="Number sold" id="numbersold"/></div>
+            <div ><input type="text" placeholder="Pick Date sold" id="datesold" class="tcal" /></div>			
+            <div ><a data-role="button" data-icon="flat-settings" data-theme="d" id="btnsalessummary" >Update Sales</a></div>
+           
+         </div><!--End of the update sales div -->
+	</div>
+	   
+	<!--start of div page to view items which needs re-order -->
+  <div data-role="page" id="orderlevel">
+	  <script>
+		var tableheader="<table width=100% class=gridtable> <tr class=head><th>#</th> <th>Product ID</th><th>Item name</th></tr>";
+		var tablevalues="";
+		//var url="http://localhost/inventorymobile/server/checkreorderitems.php";
+		var url=serverURL +"checkreorderitems.php";
+			$.getJSON(url,function(result){
+			$.each(result, function(i, field){
+			var pid=field.pid;
+			var title=field.pname;
+			//window.alert(x);
+			 tablevalues=tablevalues + "<tr><td>" + i +"</td><td>" + pid + "</td><td>"+ title + "</td></tr>";
+			 //window.alert(tablevalues);
+			  });
+			 // window.alert("Values are" + tablevalues);
+			  document.getElementById("tablearea1").innerHTML = tableheader + tablevalues;
+			 });
+		</script>
+		</table>
+		
+	    <div data-role="header" data-theme="d">
+            <a data-iconpos="notext" data-role="button" data-icon="home" title="Home" href="#homePage">Home</a>
+            <h1>Items to Order are:</h1>
+         </div>
+         <div data-role="content" role="main" id="frmorderrequired">
+            <div id="tablearea1"> </div>
+           
+         </div>
+      </div>
+
+	<!-- Starte of a div page to re-stock  --->
+ <div data-role="page" id="frmrestock">
+  <script>
+  $(document).ready(function(){	
+  $('#restock_input').focus(function(){
+		var url=serverURL +"selectitems.php";
+		$.ajax(
+		{
+        // Post select to url.
+        type : 'post',
+        url : url,
+        dataType : 'json', // expected returned data format.
+        data : {
+                //'from' : from,
+				//'to' : to
+				// the variable you're posting.
+        },
+        success : function(data){
+           //Populate the select list from the items returned from the server
+			var restock_input = document.getElementById('restock_input');
+			//call the createDatalist function and pass the event, the array data and the name of the datalist
+            restock_input.addEventListener("keyup", function(event){createDatalist(event,data,'datalistrestock')});
+		},
+        complete : function(data){
+            // do something, not critical.
+			//document.getElementById("tableareasales").innerHTML = tableheader3 +tablevalues3;
+        }
+    });
+	});
+				
+  $("#btnrestock").click(function(){
+	// get the value of the selected item from the input text field
+	var product_id = document.getElementById("restock_input").value;
+	var itemnumber = document.getElementById("itemnumber").value;
+	var datalist = document.getElementById("datalistrestock"); // instantiate the data list 
+	
+	//Now find the name of the selected item, data list does not get the description
+	for (var i=0;i<datalist.options.length;i++) 
+    if (datalist.options[i].value == product_id) {
+	var itemname=datalist.options[i].innerText;
+		}
+	    var itemselect=product_id ; //the product id is obtained from the input text
+		alert(itemselect+ " and  "+itemnumber);
+		
+		if(itemselect=='' && itemnumber=='' ){
+		alert("Please fill out the form");
+		}
+		else if(itemselect=='' && itemnumber!==''){alert('Item Name field is required')}
+		else if(itemnumber=='' && itemselect!==''){alert('New item price field is required')}
+		else{
+		var url=serverURL +"updaterestock.php";
+		$.ajax(
+		{
+        // Post select to url.
+        type : 'post',
+        url : url,
+        dataType : 'json', // expected returned data format.
+        data : {
+                'itemselect':itemselect,
+			'itemnumber':itemnumber	
+        },
+        success : function(data){
+           
+        },
+        complete : function(data){
+            // do something, not critical.
+			alert(JSON.stringify(data));
+			
+        }
+    });
+	}
+	});
+		
+	});
+	
+	</script>
+			 
+		 <div data-role="header" data-theme="d">  <!--The header of the update sales div -->
+		 
+            <a data-iconpos="notext" data-role="button" data-icon="home" title="Home" href="#homePage">Home</a>
+            <h1>Re-stock</h1>
+         </div>
+		<div data-role="content" role="main" id="restocking">
+		<div> <input type="text" name="txtrestock" id="restock_input" list="datalistrestock" placeholder="Type name or id of item">
+		<datalist id="datalistrestock" >
+        </datalist>
+		</div>
+		
+		   
+            <div ><input type="number" placeholder="Number to stock" id="itemnumber"/></div>
+            			
+            <div ><a data-role="button" data-icon="flat-settings" data-theme="d" id="btnrestock" >Update stock</a></div>
+           
+         </div>
+	</div><!--End of page div -->
+	<!-- Start of a div page to edit item prices -->
+ <div data-role="page" id="frmeditprice">
+  <script>
+  
+  $(document).ready(function(){	
+  $('#editprice_input').focus(function(){
+		var url=serverURL +"selectitems.php";
+		$.ajax(
+		{
+        // Post select to url.
+        type : 'post',
+        url : url,
+        dataType : 'json', // expected returned data format.
+        data : {
+                //'from' : from,
+				//'to' : to
+				// the variable you're posting.
+        },
+        success : function(data){
+            // This happens AFTER the PHP has returned an JSON array,            
+           //Populate the select list from the items returned from the server
+			var editprice_input = document.getElementById('editprice_input');
+			//call the createDatalist to select the items
+            editprice_input.addEventListener("keyup", function(event){createDatalist(event,data,'editprice_list')});
+        },
+        complete : function(data){
+            // do something, not critical.
+			
+        }
+    });
+	});
+			
+  $("#btupdateprice").click(function(){
+	// get the value of the selected item from the input text field
+	var product_id = document.getElementById("editprice_input").value;
+	var datalist = document.getElementById("editprice_list"); // instantiate the data list 
+	
+	//Now find the name of the selected item, data list does not get the description
+	for (var i=0;i<datalist.options.length;i++) 
+		if (datalist.options[i].value == product_id) {
+			var itemname=datalist.options[i].innerText;
+		}
+		
+		var itemselect=product_id ; //the product id is obtained from the input text
+		var newitemprice=$("#newitemprice").val();
+		alert(itemselect+ " and  "+newitemprice);
+		
+		if(itemselect=='' && newitemprice=='' ){
+		alert("Please fill out the form");
+		}
+		 else if(itemselect=='' && newitemprice!==''){alert('Item Name field is required')}
+		 else if(newitemprice=='' && itemselect!==''){alert('New item price field is required')}
+		 else{
+		var url=serverURL +"updateprice.php";
+		$.ajax(
+		{
+        // Post select to url.
+        type : 'post',
+        url : url,
+        dataType : 'json', // expected returned data format.
+        data : {
+               // Data Sending With Request To Server
+		'itemselect':itemselect,
+		'newitemprice':newitemprice	
+        },
+        success : function(data){
+           
+        },
+        complete : function(data){
+            // do something, not critical.
+			alert(JSON.stringify(data));
+			
+        }
+    });
+	}
+	});
+		
+	});
+	
+	</script>
+			 
+		 <div data-role="header" data-theme="d">  <!--The header of the update sales div -->
+		 
+            <a data-iconpos="notext" data-role="button" data-icon="home" title="Home" href="#homePage">Home</a>
+            <h1>Edit item price</h1>
+         </div>
+		<div data-role="content" role="main" id="editprice">
+		<div><input type="text" name="name" id="editprice_input" list="editprice_list" placeholder="Type name or id of item">
+		<datalist id="editprice_list" >
+        </datalist>
+		</div>
+				   
+            <div ><input type="number" placeholder="Item price" id="newitemprice"/></div>
+            			
+            <div ><a data-role="button" data-icon="flat-settings" data-theme="d" id="btupdateprice" >Update stock</a></div>
+           
+         </div>
+	</div><!--End of edit price page div -->
+
+	<!-- start of a div page to display sales summary -->
+<div data-role="page" id="frmchecksales">
+  <script>
+  $(document).ready(function(){	
+	$("#btnsales").click(function(){
+		var tableheader3="<table width=100% class=gridtable> <tr class=head><th>#</th> <th>Product ID</th><th>Date sold</th> <th>Item name</th> <th>Price</th><th>Qnty sold</th><th>Sub total</th></tr>";
+		var tablevalues3="";
+		//var from="2018-07-18";
+		var from= $("#from").val();
+		var to=$("#to").val();
+		//var url="http://localhost/inventorymobile/server/displaysales.php";
+		var url=serverURL +"displaysales.php";
+		$.ajax(
+		{
+        // Post select to url.
+        type : 'post',
+        url : url,
+        dataType : 'json', // expected returned data format.
+        data : 
+        {
+                'from' : from,
+				'to' : to
+				// the variable you're posting.
+        },
+        success : function(data)
+        {
+            // This happens AFTER the PHP has returned an JSON array,
+            // as explained below.
+            var result1, result2, message;
+		
+            for(var i = 0; i < data.length; i++){
+                // Parse through the JSON array which was returned.
+                // A proper error handling should be added here (check if
+                // everything went successful or not)
+               var pid = data[i].productid;
+			    var datesold = data[i].DateSold;
+				 var name = data[i].productName;
+				  var price = data[i].price;
+				   var qntysold = data[i].qntysold;
+				   var stock = data[i].Stock;
+				   var subtotal = data[i].subtotal;
+				tablevalues3=tablevalues3 + "<tr><td>" + i +"</td><td>" + pid + "</td><td>"+ datesold + "</td> <td>" + name +"</td><td>"+ price+"</td><td>"+ qntysold +"</t><td>"+subtotal+"</td></tr>";
+                
+			   
+            }
+        },
+        complete : function(data)
+        {
+            // do something, not critical.
+			
+			document.getElementById("tableareasales").innerHTML = tableheader3 +tablevalues3;
+        }
+    });
+	});
+	});
+				
+	</script>
+			 
+		 <div data-role="header" data-theme="d">  <!--The header of the update sales div -->
+		 
+            <a data-iconpos="notext" data-role="button" data-icon="home" title="Home" href="#homePage">Home</a>
+            <h1>Sales sold between these dates:</h1>
+         </div>
+		<div data-role="content" role="main" id="restocking">
+				   
+			   <div ><input type="text" placeholder="Sales From:" id="from" class="tcal" /></div>
+			    <div ><input type="text" placeholder="To" id="to" class="tcal" /></div>
+                    			<div id="tableareasales"> </div>
+            <div ><a data-role="button" data-icon="flat-settings" data-theme="d" id="btnsales" >Check sales</a></div>
+           
+         </div>
+	</div><!--End of page div -->
+	
+	<!-- Start of a new div page Where we sell items one by one -->
+ <div data-role="page" id="frmsales">
+  <script>
+   $(document).ready(function(){	
+  $('#sale_input').focus(function(){
+	//document.getElementById("itemselectsaleitems").options.length = 0;// clear the options
+	//var select = document.getElementById("itemselectsaleitems");
+	//select.options[select.options.length] = new Option('Select the item to sell', '0');
+	
+		//var url="http://localhost/inventorymobile/server/selectitems.php";
+		var url=serverURL +"selectitems.php";
+		$.ajax(
+		{
+        // Post select to url.
+        type : 'post',
+        url : url,
+        dataType : 'json', // expected returned data format.
+        data : {
+                //'from' : from,
+				//'to' : to
+				// the variable you're posting.
+        },
+        success : function(data){
+            // This happens AFTER the PHP has returned an JSON array,            
+           //Populate the select list from the items returned from the server
+			var sale_input = document.getElementById('sale_input');
+			//call the createDatalist to select the items
+            sale_input.addEventListener("keyup", function(event){createDatalist(event,data,'huge_list')});
+			
+	   	},
+        complete : function(data){
+            // do something, not critical.
+			
+			}
+    });
+	});
+});
+	// from here the todo.js file has functions to carry out the sale procedure
+	//which has adding data to the form, and submitting them to the saver
+	</script>
+			 
+		 <div data-role="header" data-theme="d">  <!--The header of the update sales div -->
+		 
+            <a data-iconpos="notext" data-role="button" data-icon="home" title="Home" href="#homePage">Home</a>
+            <h1>Selling</h1>
+         </div>
+		<div data-role="content" role="main" id="retailselling">
+		<div id="txtfields">
+		<div><input type="text" name="name" id="sale_input" list="huge_list" placeholder="Type name or id of item">
+		<datalist id="huge_list" >
+        </datalist>
+		</div>
+		
+		    <div ><input type="number" placeholder="Item price" id="saleprice" required/></div>
+			<div ><input type="number" placeholder="Quantity" id="qnty" required/></div>
+            </div>
+			<div ><a data-role="button"  data-icon="flat-settings" data-theme="d"  id="submit" >Add item </a></div>
+                     		  
+	<form>
+	<div id="saleslist"> 
+	<table id="salestable" class="gridtable">
+	<tr>
+	<td>Item Id</td><td>Name</td><td>Qnty</td><td>Price</td> <td>subtotal</td><td>X</td>
+	</tr>
+	</table> 
+	<div id="totalsales"> Total sales= </div>
+	<div ><input type="hidden"  id="saleid"/> </div> <!--Keeps the ID to associate all items bought at once-->
+	<ul id="tosaleList"> </ul> </div> </form>
+	<div ><a data-role="button" data-icon="flat-settings" data-theme="d" id="btsavesale" >Save Sales</a></div>
+  
+         </div>
+		 
+	</div><!--End of sales page div -->
+	
+	<!-- start of common functions 
+	The common functions are placed at the end to ensure that all DOMs accessed will have been loaded
+	-->
+	<script>
+	// function to create a data list based on the input text value
+	function createDatalist(event,array,objectid) { 
+		var input = event.target; // retireve the input element
+		var list = document.getElementById(objectid);// retrieve the datalist element
+		var min_characters = 0;// minimum number of characters before we start to generate suggestions
+    if (input.value.length < min_characters ) { // if the number of characters in the search textbox is less dont run the search
+        return;
+    } else {  
+                 list.innerHTML = ""; // clear any previously loaded options in the datalist
+				for(var i = 0; i < array.length; i++){ //the array is obtained from the JSON data returned from server 
+           		var pid = array[i].product_id;
+			    var itemname = array[i].productname;
+				 
+                    var option = document.createElement('option'); // Create a new <option> element.
+                     option.value = pid;
+					 option.text = itemname;
+                    list.appendChild(option);// attach the option to the datalist element
+					
+			       }     	
+	}//end of else
+  }//end of datalist function for sales
+
+  function storeSession(usn){
+	if(loginstatus==1){
+	sessionStorage.setItem(usn,name);
+	document.getElementById("sessionText").innerHTML="Loged in as:  "+ usn;
+	}else {  	
+	//go back to login page
+	window.location.href = baseURL +"index.html#mfloginPage";
+	}
+	  
+  }
+  function clearSession(){
+	loginstatus=0;
+	var usn="";
+	var name="";
+	sessionStorage.setItem(usn,name);	
+	storeSession(usn)	
+  }
+ function clearDivfield(objectid){
+     
+ }
+ 
+  //$("#submit").click(function() {
+  //document.getElementById("sale_input").value="";
+   // document.getElementById("sale_input").value="";// retrieve the id of the element to clear
+   // document.getElementById("saleprice").value="";// retrieve the id of the element to clear
+    //document.getElementById("qnty").value="";// retrieve the id of the element to clear
+  //clearDivfield('txtfields');
+  
+ // });
+  
+ 
+     
+	 
+	// window.onload=function(){
+	// document.getElementById("submit").onclick=function clearDivfield('retailselling');
+	// }
+	 
+	 
+  
+  </script>
+		  
+   </body>
+</html>
