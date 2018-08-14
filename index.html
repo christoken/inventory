@@ -12,8 +12,7 @@
 	  <link rel="stylesheet" href="css/gridtable.css">
       <script>//window.$ = window.jQuery = WLJQ;</script>
 	  <script src="js/todo.js"></script>
-	  <script type="text/javascript" src="http://ajax.googleapis.com/
-ajax/libs/jquery/1.5/jquery.min.js"></script>
+	  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
       <link rel="stylesheet" type="text/css" href="css/jquery.mobile.flatui.css" />
       <script src="js/jquery.min.js"></script>
       <script src="js/jquery.mobile-1.3.1.min.js"></script>
@@ -24,7 +23,14 @@ ajax/libs/jquery/1.5/jquery.min.js"></script>
  <script>
 	  var serverURL="http://localhost/inventorymobile/server/"; // The server address of the PHP files
 	  var baseURL="http://localhost/UItemplate/"; // The server address of the PHP files
-	  serverURL="http://www.threepillars.co.ke/inventory/server/";
+	  //serverURL="http://www.threepillars.co.ke/inventory/server/";
+		 serverURL= "http://threepillars.co.ke/inventory/server/";// The server address of the PHP files
+          baseURL="http://threepillars.co.ke/inventory/"; // The base address of the html and related files
+	  
+	  
+		var usn="vinrqheq_admin";
+		var psswd="QO3jPNqN";
+	  
 	  var loginstatus=0;
     	  // this is for login in
 	  $(document).ready(function(){
@@ -39,7 +45,7 @@ ajax/libs/jquery/1.5/jquery.min.js"></script>
 		else if(password=='' && username!==''){alert('The password is required')}
 		
 		else{
-			var url=serverURL +"loginmobile.php";
+		var url=serverURL +"loginmobile.php";
 		$.post(url, {//Required URL of the page on server 
 		// Data Sending With Request To Server
 		username:username,
@@ -61,19 +67,20 @@ ajax/libs/jquery/1.5/jquery.min.js"></script>
     }
 	   	
 		});
+		//alert("empty2");
 		}
 		});
 		});
 	  </script>
    </head>
- 
+  <!-- this is the start of the whole document body --> 
    <body id="content" style="display: mfloginPage;" >
    
    <!-- this is for logging page -->   <!-- start of the login div page -->
    <div data-role="page" id="mfloginPage" >
          <div data-role="header" data-theme="d">
             <!--<a data-iconpos="notext" href="#homePage" data-role="button" data-icon="back"></a> -->
-            <h1>Inventory System Login</h1>
+            <h1>Inventory Login</h1>
          </div>
          <div data-role="content" role="main">
             <div class="ui-block"><input type="text" placeholder="Username" id="loginId"/></div>
@@ -103,11 +110,12 @@ ajax/libs/jquery/1.5/jquery.min.js"></script>
           <div data-role="content" role="main"> <img src="images/chris-icon2.png" width=50%/>
 		  
 		    <div class="ui-block"><a data-role="button" data-icon="flat-man" data-theme="d" href="#frmsales">Actual sale</a></div>
-            <div class="ui-block"><a data-role="button" data-icon="flat-man" data-theme="d" href="#frmchecksales">Check sales summary</a></div>
-            <div class="ui-block"><a data-role="button" data-icon="flat-settings" data-theme="d" href="#frmsalesummary">Update Sales summary</a></div>
-            <div class="ui-block"><a data-role="button" data-icon="flat-settings" data-theme="d" href="#orderlevel">Check reorder</a></div>
-            <div class="ui-block"><a data-role="button" data-icon="flat-settings" data-theme="d" href="#frmeditprice">Edit price</a></div>
-			<div class="ui-block"><a data-role="button" data-icon="flat-location" data-theme="d" href="#frmrestock">Restock</a></div>
+            <div class="ui-block"><a data-role="button" data-icon="info" data-theme="d" href="#frmchecksales">Check sales summary</a></div>
+            <div class="ui-block"><a data-role="button" data-icon="flat-location" data-theme="d" href="#orderlevel">Check reorder</a></div>
+            
+			<div class="ui-block"><a data-role="button" data-icon="flat-location" data-theme="d" href="#frmcheckprice">Check Price</a></div>
+			
+			<div class="ui-block"><a data-role="button" data-icon="flat-settings" data-theme="d" href="#frmrestock">Restock</a></div>
             <div class="ui-block"><a data-role="button" data-icon="flat-settings" data-theme="d" href="#addnewproduct">Add new item</a></div>
 			<div class="ui-block"><a data-role="button" data-icon="flat-settings" data-theme="d" onclick="clearSession();" >Log out</a></div>
        
@@ -123,28 +131,37 @@ ajax/libs/jquery/1.5/jquery.min.js"></script>
 		$("#btninsert").click(function(){
 		var itemname= $("#itemname").val();
 		var product_id=$("#product_id").val();
-		var itemprice=$("#itemprice").val();
+		var itemprice=$("#itemprice").val();//minimum price
+		var guidingprice=$("#guidingprice").val();
+		var reorderlevel=$("#reorderlevel").val();
 		
-		if(itemname=='' && product_id=='' && itemprice==''){
+		if(itemname=='' && product_id=='' && itemprice=='' && guidingprice==''){
 		alert("Please fill out the form");
 		}
 		else if(itemname=='' && product_id!==''){alert('Name field is required')}
 		else if(product_id=='' && itemprice!==''){alert('Product ID field is required')}
 		else if(itemprice=='' && product_id!==''){alert('Item price field is required')}
+		else if(guidingprice=='' && product_id!==''){alert('Item guiding price field is required')}
+		else if(reorderlevel=='' && product_id!==''){alert('Re-orderlevel field is required')}
 		else{
 			var url=serverURL +"savenewproduct.php";
 		$.post(url, {//Required URL of the page on server 
 		// Data Sending With Request To Server
 		itemname:itemname,
 		product_id:product_id,
-		itemprice:itemprice
+		itemprice:itemprice,
+		guidingprice:guidingprice,
+		reorderlevel:reorderlevel
+		
 		},
 		function(response,status){ // Required Callback Function
 		alert(response);//"response" receives - whatever written in echo of above PHP script.
 		$("input[type=text]").val('');
-		document.getElementById("product_id").value="";// retrieve the id of the element to clear in readiness for the next item
+			document.getElementById("product_id").value="";// retrieve the id of the element to clear in readiness for the next item
 			document.getElementById("itemname").value="";// retrieve the id of the element to clear
 			document.getElementById("itemprice").value="";
+			document.getElementById("guidingprice").value="";
+			document.getElementById("reorderlevel").value="";
 		
 		});
 		}
@@ -158,7 +175,9 @@ ajax/libs/jquery/1.5/jquery.min.js"></script>
          <div data-role="content" role="main" id="frmnewproduct">
             <div class="ui-block"><input type="text" placeholder="Product ID" id="product_id"/></div>
             <div class="ui-block"><input type="text" placeholder="Product Name" id="itemname"/></div>
-			<div class="ui-block"><input type="number" placeholder="Price" id="itemprice"/></div>
+			<div class="ui-block"><input type="number" placeholder="Minimum Price" id="itemprice"/></div>
+			<div class="ui-block"><input type="number" placeholder="Guiding Price" id="guidingprice"/></div>
+			<div class="ui-block"><input type="number" placeholder="Re-order level" id="reorderlevel"/></div>
             <div class="ui-block"><a data-role="button" data-icon="flat-settings" data-theme="d" id="btninsert" >Save Item</a></div>
            
          </div>
@@ -271,7 +290,7 @@ ajax/libs/jquery/1.5/jquery.min.js"></script>
 	<!--start of div page to view items which needs re-order -->
   <div data-role="page" id="orderlevel">
 	  <script>
-		var tableheader="<table width=100% class=gridtable> <tr class=head><th>#</th> <th>Product ID</th><th>Item name</th></tr>";
+		var tableheader="<table width=100% class=gridtable> <tr class=head><th>#</th> <th>Product ID</th><th>Item name</th><th>In stock</th></tr>";
 		var tablevalues="";
 		//var url="http://localhost/inventorymobile/server/checkreorderitems.php";
 		var url=serverURL +"checkreorderitems.php";
@@ -279,8 +298,9 @@ ajax/libs/jquery/1.5/jquery.min.js"></script>
 			$.each(result, function(i, field){
 			var pid=field.pid;
 			var title=field.pname;
+			var instock=field.remaining;
 			//window.alert(x);
-			 tablevalues=tablevalues + "<tr><td>" + i +"</td><td>" + pid + "</td><td>"+ title + "</td></tr>";
+			 tablevalues=tablevalues + "<tr><td>" + i +"</td><td>" + pid + "</td><td>"+ title + "</td><td>" + instock + "</td></tr>";
 			 //window.alert(tablevalues);
 			  });
 			 // window.alert("Values are" + tablevalues);
@@ -438,14 +458,16 @@ ajax/libs/jquery/1.5/jquery.min.js"></script>
 		}
 		
 		var itemselect=product_id ; //the product id is obtained from the input text
-		var newitemprice=$("#newitemprice").val();
-		alert(itemselect+ " and  "+newitemprice);
+		var newitemprice=$("#newitemprice").val();//the minimum price
+		var guidingprice=$("#editguidingprice").val();
+		alert(itemselect+ " and  "+ newitemprice +" and " + guidingprice);
 		
 		if(itemselect=='' && newitemprice=='' ){
 		alert("Please fill out the form");
 		}
 		 else if(itemselect=='' && newitemprice!==''){alert('Item Name field is required')}
 		 else if(newitemprice=='' && itemselect!==''){alert('New item price field is required')}
+		 else if(guidingprice=='' && itemselect!==''){alert('New item guidingprice price field is required')}
 		 else{
 		var url=serverURL +"updateprice.php";
 		$.ajax(
@@ -455,9 +477,9 @@ ajax/libs/jquery/1.5/jquery.min.js"></script>
         url : url,
         dataType : 'json', // expected returned data format.
         data : {
-               // Data Sending With Request To Server
-		'itemselect':itemselect,
-		'newitemprice':newitemprice	
+        'itemselect':itemselect,
+		'newitemprice':newitemprice,	
+		'guidingprice':guidingprice		
         },
         success : function(data){
            
@@ -486,7 +508,8 @@ ajax/libs/jquery/1.5/jquery.min.js"></script>
         </datalist>
 		</div>
 				   
-            <div ><input type="number" placeholder="Item price" id="newitemprice"/></div>
+            <div ><input type="number" placeholder="Minimum price" id="newitemprice"/></div>
+			 <div ><input type="number" placeholder="Guiding  price" id="editguidingprice"/></div>
             			
             <div ><a data-role="button" data-icon="flat-settings" data-theme="d" id="btupdateprice" >Update stock</a></div>
            
@@ -527,16 +550,15 @@ ajax/libs/jquery/1.5/jquery.min.js"></script>
                 // Parse through the JSON array which was returned.
                 // A proper error handling should be added here (check if
                 // everything went successful or not)
-               var pid = data[i].productid;
-			    var datesold = data[i].DateSold;
-				 var name = data[i].productName;
-				  var price = data[i].price;
-				   var qntysold = data[i].qntysold;
-				   var stock = data[i].Stock;
-				   var subtotal = data[i].subtotal;
+					var pid = data[i].productid;
+					var datesold = data[i].DateSold;
+					var name = data[i].productName;
+					var price = data[i].price;
+				    var qntysold = data[i].qntysold;
+				    var stock = data[i].Stock;
+				    var subtotal = data[i].subtotal;
 				tablevalues3=tablevalues3 + "<tr><td>" + i +"</td><td>" + pid + "</td><td>"+ datesold + "</td> <td>" + name +"</td><td>"+ price+"</td><td>"+ qntysold +"</t><td>"+subtotal+"</td></tr>";
-                
-			   
+                			   
             }
         },
         complete : function(data)
@@ -619,8 +641,8 @@ ajax/libs/jquery/1.5/jquery.min.js"></script>
         </datalist>
 		</div>
 		
-		    <div ><input type="number" placeholder="Item price" id="saleprice" required/></div>
-			<div ><input type="number" placeholder="Quantity" id="qnty" required/></div>
+		    <div ><input type="number" data-clear-btn="true"  placeholder="Item price" id="saleprice" required></div>
+			<div ><input data-clear-btn="true"  placeholder="Quantity" id="qnty" type="number"  required/></div>
             </div>
 			<div ><a data-role="button"  data-icon="flat-settings" data-theme="d"  id="submit" >Add item </a></div>
                      		  
@@ -639,6 +661,109 @@ ajax/libs/jquery/1.5/jquery.min.js"></script>
          </div>
 		 
 	</div><!--End of sales page div -->
+
+<div data-role="page" id="frmcheckprice">
+  <script>
+  $(document).ready(function(){	
+  $('#checkprice_input').focus(function(){
+		var url=serverURL +"selectitems.php";
+		$.ajax(
+		{
+        // Post select to url.
+        type : 'post',
+        url : url,
+        dataType : 'json', // expected returned data format.
+        data : {
+                //'from' : from,
+				//'to' : to
+				// the variable you're posting.
+        },
+        success : function(data){
+           //Populate the select list from the items returned from the server
+			var checkprice_input = document.getElementById('checkprice_input');
+			//call the createDatalist function and pass the event, the array data and the name of the datalist
+            checkprice_input.addEventListener("keyup", function(event){createDatalist(event,data,'datalistcheckprice')});
+		},
+        complete : function(data){
+            // do something, not critical.
+			//document.getElementById("tableareasales").innerHTML = tableheader3 +tablevalues3;
+        }
+    });
+	});
+				
+  $("#btncheckprice").click(function(){
+  var tableheader4="<table width=100% class=gridtable> <tr class=head><th>#</th> <th>Product ID</th><th>Date set</th> <th>Item name</th> <th>Price</th><th>Re-order level</th></tr>";
+		var tablevalues4="";
+		//var from="2018-07-18";
+		var product_id= $("#checkprice_input").val();
+		
+		if(product_id==''  ){
+		alert("Please fill out the item name or id");
+		}
+		else{
+		
+		var url=serverURL +"checkprice.php";
+		$.ajax(
+		{
+        // Post select to url.
+        type : 'post',
+        url : url,
+        dataType : 'json', // expected returned data format.
+        data : 
+        {
+                'product_id' : product_id // the variable you're posting.
+        },
+        success : function(data)
+        {
+            // This happens AFTER the PHP has returned an JSON array,
+            // as explained below.
+            var result1, result2, message;
+		
+            for(var i = 0; i < data.length; i++){
+                // Parse through the JSON array which was returned.
+                // A proper error handling should be added here (check if
+                // everything went successful or not)
+			 
+					var pid = data[i].productid;
+					var date = data[i].date;
+					var name = data[i].productName;
+					var price = data[i].price;
+				    var reorderlevel = data[i].reorderlevel;
+				  
+				tablevalues4=tablevalues4 + "<tr><td>" + (i+1) +"</td><td>" + pid + "</td><td>"+ date + "</td> <td>" + name +"</td><td>"+ price+"</td><td>"+ reorderlevel +"</td></tr>";
+                			   
+            }
+        },
+        complete : function(data)
+        {
+            // do something, not critical.
+			
+			document.getElementById("tableareacheckprice").innerHTML = tableheader4 +tablevalues4;
+        }
+    });
+	}
+	});
+	});
+  
+
+	
+	</script>
+			 
+		 <div data-role="header" data-theme="d">  <!--The header of the update sales div -->
+		 
+            <a data-iconpos="notext" data-role="button" data-icon="home" title="Home" href="#homePage">Home</a>
+            <h1>Check Price</h1>
+         </div>
+		<div data-role="content" role="main" id="checkingprice">
+		<div> <input type="text" name="txtcheckprice" id="checkprice_input" list="datalistcheckprice" placeholder="Type name or id of item">
+		<datalist id="datalistcheckprice" >
+        </datalist>
+		</div>
+		            <div id="tableareacheckprice"> </div>          			
+            <div ><a data-role="button" data-icon="flat-settings" data-theme="d" id="btncheckprice" >Check Price</a></div>
+           
+         </div>
+	</div><!--End of page div for checking price-->
 	
 	<!-- start of common functions 
 	The common functions are placed at the end to ensure that all DOMs accessed will have been loaded
