@@ -8,6 +8,6 @@
 	<author email="seymourbutts@phonegap.com" href="https://phonegap.com">
 	  Chris Ken
 	</author>
-
+<icon src="icon.png" />
 	<preference name="phonegap-version" value="cli-6.0.0" />
 </widget>
