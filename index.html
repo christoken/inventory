@@ -24,8 +24,8 @@
 	  var serverURL="http://localhost/inventorymobile/server/"; // The server address of the PHP files
 	  var baseURL="http://localhost/UItemplate/"; // The server address of the PHP files
 	  //serverURL="http://www.threepillars.co.ke/inventory/server/";
-		serverURL= "http://threepillars.co.ke/inventory/server/";// The server address of the PHP files
-       baseURL="http://threepillars.co.ke/inventory/"; // The base address of the html and related files
+		//serverURL= "http://threepillars.co.ke/inventory/server/";// The server address of the PHP files
+       //baseURL="http://threepillars.co.ke/inventory/"; // The base address of the html and related files
 	  
 	  // serverURL= "http://lenana.webhostultima.com/inventory/server/";// The server address of the PHP files
        //  baseURL="http://lenana.webhostultima.com/inventory/";
@@ -49,18 +49,23 @@
 		alert("Something one");
 		var url=serverURL + "loginmobile.php";
 		alert("Something 2");
-		$.post(url, {//Required URL of the page on server 
-		// Data Sending With Request To Server
-		
-		'username':username,
-		'password':password
-		},
-		function(response,status){ // Required Callback Function
-		alert(response);//"response" receives - whatever written in echo of above PHP script.
-		var size= response.length;
+		$.ajax(
+		{
+        // Post select to url.
+        type : 'post',
+        url : url,
+		crossDomain: true,
+        dataType : 'json', // expected returned data format.
+        data : {
+                'username':username,
+				'password':password
+        },
+        success : function(data, textStatus, jqXHR){               
+         alert(data);//"response" receives - whatever written in echo of above PHP script.
+		var size= data.length;
 		alert(size);
-    if(size==11)  {
-      alert("not empty");
+	if(size==7)  {
+       alert("not empty");
 	   loginstatus=1;
 	   storeSession(username,password);//call function to say if we are logged in
 	   window.location.href = baseURL +"index.html#homePage"; //direct to the homepage if login is successfull 
@@ -69,11 +74,17 @@
     else {
         alert("Login Failure: Login page");
     }
-	   	
-		});
 		
+		    },
+		error: function(jqXHR, textStatus, errorThrown){
+			alert(textStatus, errorThrown);
+	},
+        complete : function(data){
+            // do something, not critical.
+	}
+    });
 		}
-		alert ("Somthing");
+		
 		});
 		});
 	  </script>
