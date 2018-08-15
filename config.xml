@@ -9,6 +9,11 @@
 	  Chris Ken
 	</author>
 <icon src="icon.png" />
+<gap:plugin name="cordova-plugin-whitelist" source="npm" />
+
 <access origin="*" />
-	<preference name="phonegap-version" value="cli-6.0.0" />
+<allow-intent href="*" />
+<allow-navigation href="*" />
+
+	<preference name="phonegap-version" value="cli-6.5.0" />
 </widget>
