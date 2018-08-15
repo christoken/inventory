@@ -55,8 +55,9 @@
         // Post select to url.
         "method" : 'post',
         "url" : url,
+		async: false,
 		crossDomain: true,
-        dataType : 'json', // expected returned data format.
+       // dataType : 'json', // expected returned data format.
 		
         data : {
                 'username':username,
@@ -66,7 +67,7 @@
          alert(data);//"response" receives - whatever written in echo of above PHP script.
 		var size= data.length;
 		alert(size);
-	if(size==7)  {
+	if(size==11)  {
        alert("not empty");
 	   loginstatus=1;
 	   storeSession(username,password);//call function to say if we are logged in
@@ -79,7 +80,7 @@
 		
 		    },
 		error: function(jqXHR, textStatus, errorThrown){
-			alert(textStatus, errorThrown);
+			alert(errorThrown,textStatus );
 	},
         complete : function(data){
             // do something, not critical.
