@@ -46,18 +46,20 @@
 		else if(password=='' && username!==''){alert('Password field is required')}
 		
 		else{
+		alert("Something one");
 		var url=serverURL + "loginmobile.php";
+		alert("Something 2");
 		$.post(url, {//Required URL of the page on server 
 		// Data Sending With Request To Server
-		username:username,
-		password:password
+		'username':username,
+		'password':password
 		},
 		function(response,status){ // Required Callback Function
 		alert(response);//"response" receives - whatever written in echo of above PHP script.
 		var size= response.length;
 		alert(size);
     if(size==11)  {
-      // alert("not empty");
+      alert("not empty");
 	   loginstatus=1;
 	   storeSession(username,password);//call function to say if we are logged in
 	   window.location.href = baseURL +"index.html#homePage"; //direct to the homepage if login is successfull 
