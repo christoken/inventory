@@ -52,14 +52,15 @@
 		$.ajax(
 		{
         // Post select to url.
-        type : 'post',
-        url : url,
+        "method" : 'post',
+        "url" : url,
 		crossDomain: true,
         dataType : 'json', // expected returned data format.
+		
         data : {
                 'username':username,
 				'password':password
-        },
+       },
         success : function(data, textStatus, jqXHR){               
          alert(data);//"response" receives - whatever written in echo of above PHP script.
 		var size= data.length;
