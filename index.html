@@ -25,7 +25,7 @@
 	  var serverURL="http://localhost/inventorymobile/server/"; // The server address of the PHP files
 	  var baseURL="http://localhost/UItemplate/"; // The server address of the PHP files
 	  //serverURL="http://www.threepillars.co.ke/inventory/server/";
-		serverURL= "http://threepillars.co.ke/inventory/server/";// The server address of the PHP files
+	  serverURL= "http://threepillars.co.ke/inventory/server/";// The server address of the PHP files
        baseURL="http://threepillars.co.ke/inventory/"; // The base address of the html and related files
 	  
 	  // serverURL= "http://lenana.webhostultima.com/inventory/server/";// The server address of the PHP files
@@ -67,7 +67,7 @@
          alert(data);//"response" receives - whatever written in echo of above PHP script.
 		var size= data.length;
 		alert(size);
-	if(size==11)  {
+	if(size>=10)  {
        alert("not empty");
 	   loginstatus=1;
 	   storeSession(username,password);//call function to say if we are logged in
