@@ -25,11 +25,11 @@
 	  var baseURL="http://localhost/UItemplate/"; // The server address of the PHP files
 	  //serverURL="http://www.threepillars.co.ke/inventory/server/";
 		 serverURL= "http://threepillars.co.ke/inventory/server/";// The server address of the PHP files
-          baseURL="http://threepillars.co.ke/inventory/"; // The base address of the html and related files
+         baseURL="http://threepillars.co.ke/inventory/"; // The base address of the html and related files
 	  
 	  
-		var usn="vinrqheq_admin";
-		var psswd="QO3jPNqN";
+		//var usn="vinrqheq_admin";
+		//var psswd="QO3jPNqN";
 	  
 	  var loginstatus=0;
     	  // this is for login in
@@ -41,21 +41,21 @@
 		if(username=='' && password=='' ){
 		alert("Please fill out the form");
 		}
-		else if(username=='' && password!==''){alert('Username is required')}
-		else if(password=='' && username!==''){alert('The password is required')}
+		else if(username=='' && password!==''){alert('Username field is required')}
+		else if(password=='' && username!==''){alert('Password field is required')}
 		
 		else{
 		var url=serverURL +"loginmobile.php";
 		$.post(url, {//Required URL of the page on server 
 		// Data Sending With Request To Server
 		username:username,
-		password:password,
+		password:password
 		},
 		function(response,status){ // Required Callback Function
 		alert(response);//"response" receives - whatever written in echo of above PHP script.
 		var size= response.length;
-		//alert(size);
-    if(size>4)  {
+		alert(size);
+    if(size==11)  {
       // alert("not empty");
 	   loginstatus=1;
 	   storeSession(username,password);//call function to say if we are logged in
@@ -63,11 +63,11 @@
 	  
     }
     else {
-        alert("empty");
+        alert("Login Failure: Login page");
     }
 	   	
 		});
-		//alert("empty2");
+		
 		}
 		});
 		});
@@ -812,25 +812,7 @@
  function clearDivfield(objectid){
      
  }
- 
-  //$("#submit").click(function() {
-  //document.getElementById("sale_input").value="";
-   // document.getElementById("sale_input").value="";// retrieve the id of the element to clear
-   // document.getElementById("saleprice").value="";// retrieve the id of the element to clear
-    //document.getElementById("qnty").value="";// retrieve the id of the element to clear
-  //clearDivfield('txtfields');
-  
- // });
-  
- 
-     
-	 
-	// window.onload=function(){
-	// document.getElementById("submit").onclick=function clearDivfield('retailselling');
-	// }
-	 
-	 
-  
+   
   </script>
 		  
    </body>
