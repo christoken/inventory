@@ -25,7 +25,7 @@
  <script>
 	  var serverURL="http://localhost/inventorymobile/server/"; // The server address of the PHP files
 	  var baseURL="http://localhost/UItemplate/"; // The server address of the PHP files
-	 serverURL= "http://threepillars.co.ke/inventory/server/";// The server address of the PHP files
+	serverURL= "http://threepillars.co.ke/inventory/server/";// The server address of the PHP files
      baseURL="http://threepillars.co.ke/inventory/"; // The base address of the html and related files
 	  		  
     	  // this is for login in
@@ -295,16 +295,17 @@
 	<!--start of div page to view items which needs re-order -->
   <div data-role="page" id="orderlevel">
 	<script>
-	  var tableheader="<table width=100% class=gridtable> <tr class=head><th>#</th> <th>Product ID</th><th>Item name</th><th>In stock</th></tr>";
+	  var tableheader="<table width=100% class=gridtable> <tr class=head><th>#</th> <th>Product ID</th><th>Item name</th><th>Orderlevel</th><th>In stock</th></tr>";
 		var tablevalues="";
 		 var url=serverURL +"checkreorderitems.php";
 			$.getJSON(url,function(result){
 			$.each(result, function(i, field){
 			var pid=field.pid;
 			var title=field.pname;
+			var reorderlevel=field.reorderlevel;
 			var instock=field.remaining;
 			//window.alert(x);
-			 tablevalues=tablevalues + "<tr><td>" + i +"</td><td>" + pid + "</td><td>"+ title + "</td><td>" + instock + "</td></tr>";
+			 tablevalues=tablevalues + "<tr><td>" + i +"</td><td>" + pid + "</td><td>"+ title + "</td><td>" + reorderlevel + "</td><td>"+ instock + "</td></tr>";
 			});
 			   document.getElementById("tablearea1").innerHTML = tableheader + tablevalues;
 			 });
@@ -698,7 +699,7 @@
 	});
 				
   $("#btncheckprice").click(function(){
-  var tableheader4="<table width=100% class=gridtable> <tr class=head><th>#</th> <th>Code</th><th>Date set</th> <th>Desc.</th> <th>M.Price</th><th> G. Price </th><th>Re-order level</th></tr>";
+  var tableheader4="<table width=100% class=gridtable> <tr class=head><th>#</th> <th>Code</th><th>Date set</th> <th>Desc.</th> <th>M.Price</th><th> G. Price </th><th> Instock </th><th>Re-order level</th></tr>";
 		var tablevalues4="";
 		//var from="2018-07-18";
 		var product_id= $("#checkprice_input").val();
@@ -731,7 +732,8 @@
 					var price = data[i].price;
 					var guidingprice = data[i].guidingprice;
 				    var reorderlevel = data[i].reorderlevel;
-		tablevalues4=tablevalues4 + "<tr><td>" + (i+1) +"</td><td>" + pid + "</td><td>"+ date + "</td> <td>" + name +"</td><td>"+ price+"</td><td>"+ guidingprice+"</td><td>" +reorderlevel +"</td></tr>";
+					var instock=data[i].instock;
+		tablevalues4=tablevalues4 + "<tr><td>" + (i+1) +"</td><td>" + pid + "</td><td>"+ date + "</td> <td>" + name +"</td><td>"+ price+"</td><td>"+ guidingprice+"</td><td>" + instock +"</td><td>"+reorderlevel +"</td></tr>";
                 
             }
         },
